@@ -104,8 +104,9 @@
 
 	var reverseMode = true;
 
-	var codes = ["to see, to do, to eat, to buy, to drink, to read, to sleep, to play, to rest, to work, to go, to hit, to be cold, to sit down, to laugh, to be seen, to be cool, to be strange, to wait, to write, to sell, to write down, to come, to catch, to like, to be, to learn, to make"];
-	var answers = ["보다, 하다, 먹다, 사다, 마시다, 읽다, 자다, 놀다, 쉬다, 일하다, 가다, 때리다, 춥다, 앉다, 웃다, 보이다, 멌있다, 이상하다, 기다리다, 쓰다, 팔다, 적다, 오다, 잡다, 좋아하다, 있다, 배우다, 만들다"];
+	var codes = ["to see", "to do", "to eat", "to buy", "to drink", "to read", "to sleep", "to play", "to rest", "to work", "to go", "to hit", "to be cold", "to sit down", "to laugh", "to be seen", "to be cool", "to be strange", "to wait", "to write", "to sell", "to write down", "to come", "to catch", "to like", "to be", "to learn", "to make"];
+	var answers = ["보다", "하다", "먹다", "사다", "마시다", "읽다", "자다", "놀다", "쉬다", "일하다", "가다", "때리다", "춥다", "앉다", "웃다", "보이다", "멌있다", "이상하다", "기다리다", "쓰다", "팔다", "적다", "오다", "잡다", "좋아하다", "있다", "배우다", "만들다"];
+	//var answers = ["to see", "to do", "to eat", "to buy", "to drink", "to read", "to sleep", "to play", "to rest", "to work", "to go", "to hit", "to be cold", "to sit down", "to laugh", "to be seen", "to be cool", "to be strange", "to wait", "to write", "to sell", "to write down", "to come", "to catch", "to like", "to be", "to learn", "to make"];
 
 	function startup(){
 		console.log("Loaded!");
@@ -128,7 +129,7 @@
 				div_score.hidden = true;
 				div_menu.hidden = false;
 
-				clearTimeout(timer_timer);
+				//clearTimeout(timer_timer);
 
 			break;
 			case 'endless':
@@ -147,8 +148,8 @@
 				div_score.hidden = false;
 				div_menu.hidden = true;
 
-				timer_timeSize = 60;
-				timer_timer = window.setInterval(timer, 1000);
+				//timer_timeSize = 60;
+				//timer_timer = window.setInterval(timer, 1000);
 
 				h_timer.innerText = "Timer : " + timer_timeSize;
 
@@ -162,8 +163,8 @@
 			div_score.hidden = false;
 			div_menu.hidden = true;
 
-			timer_timeSize = 60;
-			timer_timer = window.setInterval(timer, 1000);
+			//timer_timeSize = 60;
+			//timer_timer = window.setInterval(timer, 1000);
 
 			h_timer.innerText = "Timer : " + timer_timeSize;
 
@@ -201,33 +202,8 @@
 
 		var randomQ = Math.floor(Math.random()*codes.length);
 
-		//generate equation
-		var a = Math.floor(Math.random() * (10+difficultyFactor)) + 1; //1 to 10
-		var b = Math.floor(Math.random() * (10+difficultyFactor)) + 1; //1 to 10
-
-		var operationDecider = Math.floor(Math.random() * 2); // 0 to 3
-		var operator = "+";
-
 		var reverseDecider = Math.floor(Math.random()*2);
-		//reverseDecider = 0;
-		difficultyFactor = reverseDecider;
-
-		switch(operationDecider){
-			case 0:
-				operator = "+";
-				correctAnswer = a+b;
-			break;
-			case 1:
-				operator = "-";
-				correctAnswer = a-b;
-			break;
-			case 2:
-				operator = "*";
-				correctAnswer = a*b;
-			break;
-			default:
-
-		}
+		reverseDecider = 0;
 
 		//h_equation.innerText = a + " " + operator + " " + b;
 
@@ -240,9 +216,8 @@
 		}
 		//generate things for the buttons
 
-
-
 		buttonWithCorrectAnswer = Math.floor(Math.random() * buttonAmount) //0 to 3
+
 
 		for (var i=0; i<buttonAmount; i++){
 
@@ -254,6 +229,8 @@
 					buttons[i].value = codes[randomQ];
 				}
 			} else {
+
+
 				do{
 					//var c = Math.floor(Math.random() * (correctAnswer + 5)) + (correctAnswer-5); //correct-5 to correct+5
 					var r = Math.floor(Math.random()*codes.length);
@@ -264,9 +241,11 @@
 						buttons[i].value = codes[r];
 					}
 				} while (r == randomQ);
+
 			}
 
 		}
+
 
 	}
 
