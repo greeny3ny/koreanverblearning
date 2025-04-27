@@ -8,7 +8,7 @@ p {
 
 h1{
 	color:red;
-	font-size:16vh;
+	font-size:10vh;
 	text-align: center;
 	width: 98%;
 }
@@ -23,7 +23,7 @@ h1{
 	padding:10px;
 	display: inline-block;
 
-	font-size: 3vh;
+	font-size: 3vw;
 	
 	-webkit-border-radius:0px;
 	-webkit-appearance: none;
