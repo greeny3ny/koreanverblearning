@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+	<head>
+
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+
+		<link rel="icon" sizes="192x192" href="icons/icon.png" />
+		<link rel="apple-touch-icon" href="icons/icon.png" />
+		<link rel="shortcut icon" href="icons/weeicon.png" type="image/x-icon" />
+
+
+		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
+
+
+		<title>KOREAN LEARNING VERBS</title>
+		<link href="styles/html5reset.css" rel="stylesheet"/>
+		<link href="styles/style.css" rel="stylesheet"/>
+	</head>
+
+	<body onload="startup()">
+
+		<div id="div_display">
+
+			<h1 id="h_equation"> an question goes here </h3>
+
+			<input id="h_a0" type="button" value="0" onclick="buttonClicked(0);" />
+			<input id="h_a1" type="button" value="1" onclick="buttonClicked(1);" />
+			<input id="h_a2" type="button" value="2" onclick="buttonClicked(2);" />
+			<input id="h_a3" type="button" value="3" onclick="buttonClicked(3);" />
+			<input id="h_a4" type="button" value="3" onclick="buttonClicked(4);" />
+			<input id="h_a5" type="button" value="3" onclick="buttonClicked(5);" />
+			<input id="h_a6" type="button" value="3" onclick="buttonClicked(6);" />
+			<input id="h_a7" type="button" value="3" onclick="buttonClicked(7);" />
+
+
+		</div>
+
+		<div id="div_score">
+
+			<table style="width:98%">
+				<tr>
+					<td>
+						<p id="h_correct"> Correct : 0</p>
+					</td>
+					<td>
+						<p id="h_wrong">Wrong : 0</p>
+					</td>
+				</tr>
+			</table>
+
+
+
+			<p id="h_difficulty">Difficulty Factor : 0</p>
+			<p id="h_score">Score : 0</p>
+			<p id="h_timer"></p>
+
+			<input id="h_back" type="button" value="Back" onclick="menu('home');" />
+
+		</div>
+
+		<div id="div_menu">
+
+			<h2 style="font-size:10vh; padding:10px">Craigs Korean Verb Learning App</h2>
+
+			<input id="h_m0" type="button" value="START" onclick="menu('endless');" />
+			<!--<input id="h_m1" type="button" value="TIMED MODE" onclick="menu('timed');" />-->
+
+			<!--<input id="h_m2" type="button" value="ENDURANCE MODE" onclick="menu('endurance');" />-->
+			<!--<input id="h_m3" type="button" value="ONE LIFE MODE" onclick="menu('onelife');" />-->
+
+		</div>
+
+	</body>
+
+</html>
+
+
+<script>
+
+	var buttonsContainer = document.querySelector("#div_display");
+	var buttons = buttonsContainer.querySelectorAll("input[type=button]");
+
+	console.log(buttons);
+
+	var correctAnswer = 0;
+	var buttonWithCorrectAnswer = 0;
+
+	var correctNumber = 0;
+	var wrongNumber = 0;
+
+	var difficultyFactor = 0;
+
+	var timer_timeSize = 0;
+	var timer_timer;
+
+	var buttonAmount = 8;
+
+	var mode = "";
+
+	var reverseMode = true;
+
+	var codes = ["to see, to do, to eat, to buy, to drink, to read, to sleep, to play, to rest, to work, to go, to hit, to be cold, to sit down, to laugh, to be seen, to be cool, to be strange, to wait, to write, to sell, to write down, to come, to catch, to like, to be, to learn, to make"];
+	var answers = ["보다, 하다, 먹다, 사다, 마시다, 읽다, 자다, 놀다, 쉬다, 일하다, 가다, 때리다, 춥다, 앉다, 웃다, 보이다, 멌있다, 이상하다, 기다리다, 쓰다, 팔다, 적다, 오다, 잡다, 좋아하다, 있다, 배우다, 만들다"];
+
+	function startup(){
+		console.log("Loaded!");
+
+		div_display.hidden = true;
+		div_score.hidden = true;
+		div_menu.hidden = false;
+
+		//generateNextQuestion();
+
+	}
+
+	function menu(input){
+
+		mode = input;
+
+		switch (input){
+			case 'home':
+				div_display.hidden = true;
+				div_score.hidden = true;
+				div_menu.hidden = false;
+
+				clearTimeout(timer_timer);
+
+			break;
+			case 'endless':
+				div_display.hidden = false;
+				div_score.hidden = false;
+				div_menu.hidden = true;
+
+				h_timer.innerText = "";
+
+				resetStage();
+				enableButtons(true);
+				generateNextQuestion();
+			break;
+			case 'timed':
+				div_display.hidden = false;
+				div_score.hidden = false;
+				div_menu.hidden = true;
+
+				timer_timeSize = 60;
+				timer_timer = window.setInterval(timer, 1000);
+
+				h_timer.innerText = "Timer : " + timer_timeSize;
+
+				resetStage();
+				enableButtons(true);
+				generateNextQuestion();
+			break;
+			case 'endurance':
+
+			div_display.hidden = false;
+			div_score.hidden = false;
+			div_menu.hidden = true;
+
+			timer_timeSize = 60;
+			timer_timer = window.setInterval(timer, 1000);
+
+			h_timer.innerText = "Timer : " + timer_timeSize;
+
+			resetStage();
+			enableButtons(true);
+			generateNextQuestion();
+			break;
+			case 'onelife':
+
+			div_display.hidden = false;
+			div_score.hidden = false;
+			div_menu.hidden = true;
+
+			timer_timeSize = 60;
+			timer_timer = window.setInterval(timer, 1000);
+
+			h_timer.innerText = "Timer : " + timer_timeSize;
+
+			resetStage();
+			enableButtons(true);
+			generateNextQuestion();
+			break;
+
+
+		}
+
+
+	}
+
+
+	function generateNextQuestion(){
+
+
+		resetButtonColours();
+
+		var randomQ = Math.floor(Math.random()*codes.length);
+
+		//generate equation
+		var a = Math.floor(Math.random() * (10+difficultyFactor)) + 1; //1 to 10
+		var b = Math.floor(Math.random() * (10+difficultyFactor)) + 1; //1 to 10
+
+		var operationDecider = Math.floor(Math.random() * 2); // 0 to 3
+		var operator = "+";
+
+		var reverseDecider = Math.floor(Math.random()*2);
+		//reverseDecider = 0;
+		difficultyFactor = reverseDecider;
+
+		switch(operationDecider){
+			case 0:
+				operator = "+";
+				correctAnswer = a+b;
+			break;
+			case 1:
+				operator = "-";
+				correctAnswer = a-b;
+			break;
+			case 2:
+				operator = "*";
+				correctAnswer = a*b;
+			break;
+			default:
+
+		}
+
+		//h_equation.innerText = a + " " + operator + " " + b;
+
+		if (reverseDecider == 1){
+			h_equation.innerText = "" + codes[randomQ];
+			correctAnswer = answers[randomQ];
+		} else {
+			h_equation.innerText = "" + answers[randomQ];
+			correctAnswer = codes[randomQ];
+		}
+		//generate things for the buttons
+
+
+
+		buttonWithCorrectAnswer = Math.floor(Math.random() * buttonAmount) //0 to 3
+
+		for (var i=0; i<buttonAmount; i++){
+
+			if (i == buttonWithCorrectAnswer){
+
+				if (reverseDecider == 1){
+					buttons[i].value = answers[randomQ];
+				} else {
+					buttons[i].value = codes[randomQ];
+				}
+			} else {
+				do{
+					//var c = Math.floor(Math.random() * (correctAnswer + 5)) + (correctAnswer-5); //correct-5 to correct+5
+					var r = Math.floor(Math.random()*codes.length);
+
+					if (reverseDecider == 1){
+						buttons[i].value = answers[r];
+					} else {
+						buttons[i].value = codes[r];
+					}
+				} while (r == randomQ);
+			}
+
+		}
+
+	}
+
+	function resetButtonColours(){
+		for (var i=0; i<buttonAmount; i++){
+			document.getElementById("h_a"+i).style.background="#97bcfc";
+		}
+	}
+
+	function updateStats(c, w){
+
+		h_correct.innerText = "Correct : " + c;
+		h_wrong.innerText = "Wrong : " + w;
+
+
+
+		h_difficulty.innerText = "Difficulty Factor : " + difficultyFactor;
+
+		h_score.innerText = "Score : " + ((c+difficultyFactor) - w);
+
+	}
+
+	function timer(){
+
+		if (timer_timeSize > 0){
+			timer_timeSize --;
+			h_timer.innerText = "Timer : " + timer_timeSize;
+			console.log(timer_timeSize);
+		} else {
+			enableButtons(false);
+		}
+
+
+	}
+
+	function enableButtons(status){
+
+		for (var i=0; i<buttonAmount; i++){
+			buttons[i].disabled = !status;
+		}
+
+	}
+
+	function resetStage(){
+
+		correctNumber = 0;
+		wrongNumber = 0;
+		difficultyFactor = 0;
+
+		h_correct.innerText = "Correct : 0";
+		h_wrong.innerText = "Wrong : 0";
+		h_difficulty.innerText = "Difficulty Factor : 0";
+		h_score.innerText = "Score : 0";
+	}
+
+	function buttonClicked(x){
+
+		if (buttons[x].value == correctAnswer){
+			correctNumber ++;
+			//generate next stuff
+
+
+			document.getElementById("h_a"+x).style.background="#00ff00";
+
+			//background-color:#97bcfc;
+
+
+			if (mode == 'endurance'){
+				timer_timeSize += 3;
+			}
+
+		} else {
+
+			document.getElementById("h_a"+buttonWithCorrectAnswer).style.background="#00ff00";
+			document.getElementById("h_a"+x).style.background="#ff0000";
+
+			wrongNumber ++;
+			if (difficultyFactor > 0){
+				difficultyFactor -= 1;
+			}
+
+			if (mode == 'endurance'){
+				timer_timeSize -= 6;
+			}
+			if (mode == 'onelife'){
+				timer_timeSize = 0;
+				h_timer.innerText = "Timer : 0";
+			}
+
+		}
+
+		setTimeout(generateNextQuestion,1000);
+		updateStats(correctNumber, wrongNumber);
+
+	}
+
+
+</script>
