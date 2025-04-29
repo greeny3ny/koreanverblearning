@@ -66,8 +66,19 @@
 		<div id="div_addWord">
 			<input id="h_tx0" type="text" value="ENG"/>
 			<input id="h_tx1" type="text" value="KOR"/>
-			<input id="h_m50" type="button" value="ADD" onclick="menu('addWord');" />
+			<input id="h_m50" type="button" value="ADD" onclick="addWord();" />
 			<input id="h_m51" type="button" value="BACK" onclick="menu('home');"/>
+
+			<table>
+				<tr>
+					<th>ENGLISH</th>
+					<th>KOREAN</th>
+				<tr>
+				<tr>
+					<td><p id="table_eng" style="font-size: 16px"></p></td>
+					<td><p id="table_kor" style="font-size: 14px"></p></td>
+				<tr>
+			</table>
 		</div>
 
 		<div id="div_menu">
@@ -76,10 +87,11 @@
 
 			<input id="h_m0" type="button" value="START" onclick="menu('endless');" />
 			<input id="h_m1" type="button" value="ADD WORD" onclick="menu('addWordMenu');"/>
+			<input id="h_m2" type="button" value="RESET DATABASE" onclick="resetDatabase()"/>
 
 
-			<!--<input id="h_m2" type="button" value="ENDURANCE MODE" onclick="menu('endurance');" />-->
-			<!--<input id="h_m3" type="button" value="ONE LIFE MODE" onclick="menu('onelife');" />-->
+
+
 
 		</div>
 
@@ -166,17 +178,30 @@
 			populateArrays();
 		});
 
-		//populateDatabaseTest1();
+		//resetDatabase();
 		//generateNextQuestion();
 
 	}
+	//emergency use only
+	function resetDatabase(){
 
-	//redundant
-	function populateDatabaseTest1(){
+		codes = ["to see", "to do", "to eat", "to buy", "to drink", "to read", "to sleep", "to play", "to rest", "to work", "to go", "to hit", "to be cold", "to sit down", "to laugh", "to be seen", "to be cool", "to be strange", "to wait", "to write", "to sell", "to write down", "to come", "to catch", "to like", "to be", "to learn", "to make"];
+
+		answers = ["보다", "하다", "먹다", "사다", "마시다", "읽다", "자다", "놀다", "쉬다", "일하다", "가다", "때리다", "춥다", "앉다", "웃다", "보이다", "멌있다", "이상하다", "기다리다", "쓰다", "팔다", "적다", "오다", "잡다", "좋아하다", "있다", "배우다", "만들다"];
+
+		testWords=[]
+
 		for (var i=0; i<codes.length; i++){
 			testWords.push([codes[i], answers[i]]);
 		}
 		console.log("t - " + testWords);
+		fbGameRef.update({
+			words : testWords
+		});
+
+		//table_eng.innerHTML = "";
+		//table_kor.innerHTML = "";
+		//updateAWMenuText();
 	}
 
 	function populateArrays(){
@@ -201,12 +226,6 @@
 				div_menu.hidden = false;
 				div_addWord.hidden = true;
 
-				//clearTimeout(timer_timer);
-
-
-
-
-
 			break;
 			case 'endless':
 				div_display.hidden = false;
@@ -226,55 +245,39 @@
 				generateNextQuestion();
 			break;
 			case 'addWord':
-				//div_display.hidden = true;
-				//div_score.hidden = true;
-				//div_menu.hidden = true;
-				//div_addWord.hidden = false;
-				var t = [document.getElementById("h_tx0").value,document.getElementById("h_tx1").value];
-				testWords.push(t);
-				console.log(testWords);
-				fbGameRef.update({
-					words : testWords
-				});
-
-
+				//addWord();
 			break;
 			case 'addWordMenu':
+				div_display.hidden = true;
+				div_score.hidden = true;
+				div_menu.hidden = true;
+				div_addWord.hidden = false;
 
-			div_display.hidden = true;
-			div_score.hidden = true;
-			div_menu.hidden = true;
-			div_addWord.hidden = false;
-
-			//timer_timeSize = 60;
-			//timer_timer = window.setInterval(timer, 1000);
-
-			h_timer.innerText = "Timer : " + timer_timeSize;
-
-			resetStage();
-			enableButtons(true);
-			generateNextQuestion();
+				updateAWMenuText();
 			break;
-			case 'onelife':
-
-			div_display.hidden = false;
-			div_score.hidden = false;
-			div_menu.hidden = true;
-
-			timer_timeSize = 60;
-			timer_timer = window.setInterval(timer, 1000);
-
-			h_timer.innerText = "Timer : " + timer_timeSize;
-
-			resetStage();
-			enableButtons(true);
-			generateNextQuestion();
-			break;
-
-
 		}
 
 
+	}
+
+	function updateAWMenuText(){
+
+		table_eng.innerHTML = "";
+		table_kor.innerHTML = "";
+		for (var i=0; i<testWords.length; i++){
+			table_eng.innerHTML += testWords[i][0] + "	 ~~~~	 " + testWords[i][1] + "<br />";
+			//table_kor.innerHTML += testWords[i][1] + "<br />";
+		}
+	}
+
+	function addWord(){
+		var t = [document.getElementById("h_tx0").value,document.getElementById("h_tx1").value];
+		testWords.push(t);
+		console.log(testWords);
+		fbGameRef.update({
+			words : testWords
+		});
+		updateAWMenuText();
 	}
 
 
